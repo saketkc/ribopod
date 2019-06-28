@@ -8,7 +8,13 @@ from dash.dependencies import State
 from init import __DATASETS__
 from init import __SPECIES__
 
-from metagene_helper import project_summary_metagene_creator, plot_metagene_coverage
+from fragment_length_helper import (
+    parse_ribotricer_bam_summary,
+    project_summary_read_length_creator,
+    plot_read_length_distribution,
+)
+from metagene_helper import project_summary_metagene_creator, plot_metagene_coverage, metagene_profile_to_phase_score_matrix,plot_phase_score_heatmap
+
 from project_helper import (
     get_projects,
     get_srp_table,
@@ -18,7 +24,6 @@ from project_helper import (
 
 from dash_helper import generate_table
 from app_multipage import app
-
 
 layout = html.Div(
     [
@@ -79,9 +84,7 @@ layout = html.Div(
                         html.Div(
                             [
                                 html.Label("Read length for metagene plot: "),
-                                dcc.Dropdown(
-                                    options=28, value=28, id="read_length"
-                                ),
+                                dcc.Dropdown(options=28, value=28, id="read_length"),
                             ],
                             style={
                                 "width": "25%",
@@ -209,39 +212,24 @@ def generate_read_length_dropdown(srp, assembly):
 def display_metagene_plot(srp, assembly, normalize, length):  # gene_name, n_clicks):
     if isinstance(srp, dict):
         srp = srp["value"]
-    metadata_tsv = get_project_summary_file(__DATASETS__, srp)
-    metagene_dfs = project_summary_metagene_creator(metadata_tsv)
+    project_summary_file = get_project_summary_file(__DATASETS__, srp)
+    metagene_dfs = project_summary_metagene_creator(project_summary_file)
     return plot_metagene_coverage(metagene_dfs, length)
 
 
-"""
 @app.callback(
     Output("length-dist-plot", "figure"),
     [Input("srp", "value"), Input("assembly", "value")],
-    # [State("gene-input", "value")],
-    # [Input("gene-submit", "n_clicks")],
 )
-def display_read_length_dist_plot(srp, assembly):  # , state, n_clicks):
+def display_read_length_dist_plot(srp, assembly):
     if isinstance(srp, dict):
         srp = srp["value"]
-    read_lengths = collect_read_lengths(srp, assembly)
-    try:
-        srp_df = get_srp_table_minimal(srp, assembly, "/data1")
-        srp_df = (
-            srp_df[["experiment_accession", "experiment_title"]]
-            .drop_duplicates()
-            .set_index("experiment_accession")
-        )
-        new_read_lengths = {
-            key + "-" + str(srp_df.loc[key, "experiment_title"]): v
-            for key, v in read_lengths.items()
-        }
-    except:
-        new_read_lengths = read_lengths
-    if not new_read_lengths:
-        return
+    if isinstance(assembly, dict):
+        assembly = assembly["value"]
+    project_summary_file = get_project_summary_file(__DATASETS__, srp)
+    read_length_dist = project_summary_read_length_creator(project_summary_file)
     return plot_read_length_distribution(
-        new_read_lengths, shared_yaxes=False, plot_ridge=False
+        read_length_dist, shared_yaxes=False, plot_ridge=False
     )
 
 
@@ -254,9 +242,10 @@ def display_read_length_dist_plot(srp, assembly):  # , state, n_clicks):
 def display_coherence_plot(srp, assembly):  # , state, n_clicks):
     if isinstance(srp, dict):
         srp = srp["value"]
-    read_lengths = get_available_read_lengths(srp, assembly)
-    df = get_coherence_scores(srp, assembly, read_lengths)
-    return plot_coherence_heatmap(df)
+    if isinstance(assembly, dict):
+        assembly = assembly["value"]
+    project_summary_file = get_project_summary_file(__DATASETS__, srp)
+    metagene_dfs = project_summary_metagene_creator(project_summary_file)
+    phase_score_df = metagene_profile_to_phase_score_matrix(metagene_dfs)
+    return plot_phase_score_heatmap(phase_score_df)
 
-
-"""

@@ -5,7 +5,7 @@ import pandas as pd
 from plotly import tools
 from plotly.graph_objs import Scatter, Bar  # , Heatmap Figure,
 
-# import plotly.figure_factory as ff
+import plotly.figure_factory as ff
 
 __FRAME_COLORS__ = ["#fc8d62", "#66c2a5", "#8da0cb"]
 
@@ -35,6 +35,30 @@ def parse_metagene_profile(file_path):
     return metagene_df
 
 
+def metagene_profile_to_phase_score_matrix(metagene_dfs):
+    """Convert metagene dataframe to a matrix with phase scores.
+
+    Parameters
+    ----------
+    metagene_dfs: dict(pd.DataFrame)
+                  Parsed dataframe as obtained from paring metagene file
+
+    Returns
+    -------
+    phase_score_matrix: pd.Series
+                        A Series with metagene as s
+
+    """
+    phase_score_merged_df = pd.DataFrame()
+    for sample_name, metagene_df in metagene_dfs.items():
+        # Pull out the profile of coverage
+        phase_score_df = metagene_df[['phase_score']]
+        phase_score_df.columns = [sample_name]
+        phase_score_merged_df = phase_score_merged_df.join(phase_score_df, how='outer')
+    return phase_score_merged_df.T
+
+
+
 def project_summary_metagene_creator(project_summary_file):
     """Parse project summary file to prepare project for metagene analysis.
 
@@ -54,7 +78,9 @@ def project_summary_metagene_creator(project_summary_file):
         .set_index("experiment_accession")
         .sort_index()
     )
-    summary_df = summary_df[summary_df.ribotricer_metagene_5p==summary_df.ribotricer_metagene_5p]
+    summary_df = summary_df[
+        summary_df.ribotricer_metagene_5p == summary_df.ribotricer_metagene_5p
+    ]
     metagene_dfs = OrderedDict()
     for sample_name, row in summary_df.iterrows():
         # Load the 5' tsv
@@ -70,7 +96,7 @@ def project_summary_metagene_creator(project_summary_file):
 def plot_metagene_coverage(
     metagene_dfs,
     fragment_length,
-    position_range="default",
+    position_range=np.arange(-20, 120),
     samples_per_row=1,
     plot_type="bar",
     normalize_per_codon=False,
@@ -114,8 +140,6 @@ def plot_metagene_coverage(
             profile = profile[position_range]
         else:
             position_range = profile.index
-        phase_score = row.phase_score
-
         if plot_type == "bar":
             frame0 = profile[profile.index % 3 == 0]
             frame1 = profile[profile.index % 3 == 1]
@@ -177,5 +201,34 @@ def plot_metagene_coverage(
     fig["layout"].update(font=dict(family="Arial", size=28, color="#000000"))
     for i in fig["layout"]["annotations"]:
         i["font"] = dict(size=28)  # ,color='#ff0000')
+    fig["layout"].update(showlegend=False)
+    return fig
+
+
+def plot_phase_score_heatmap(phase_score_df):
+    """Plot phase score heatmap.
+
+    Parameters
+    ----------
+    phase_score_df: pd.DataFrame
+                    DataFrame with samples as row names and columns as nucleotides
+    """
+    sample_names = phase_score_df.index.tolist()
+    fragment_lengths = phase_score_df.columns.tolist()
+    phase_scores = phase_score_df.values.tolist()
+    fragment_lengths = list(map(lambda x: str(x) + "-nt", fragment_lengths))
+
+    if len(fragment_lengths) == 0 or len(phase_scores) == 0 or len(sample_names) == 0:
+        return
+
+    phase_scores = np.around(phase_scores, decimals=2)
+    fig = ff.create_annotated_heatmap(phase_scores, x=fragment_lengths, y=sample_names, annotation_text=phase_scores, colorscale=[[0.0, 'rgb(255,224,144)'], [0.428, 'rgb(255,224,144)'], [1.0, 'rgb(165, 0, 38)']]) #colorscale="RdBu")
+    fig["layout"].update(
+        height=max(40 * len(sample_names), 500), autosize=False, title="Phase Score heatmap"
+    )
+    fig["layout"].update(scene=dict(aspectmode="data"))
+    fig["layout"].update(
+        font=dict(family="Arial", size=28)
+    )
     fig["layout"].update(showlegend=False)
     return fig
