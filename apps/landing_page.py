@@ -13,7 +13,12 @@ from fragment_length_helper import (
     project_summary_read_length_creator,
     plot_read_length_distribution,
 )
-from metagene_helper import project_summary_metagene_creator, plot_metagene_coverage, metagene_profile_to_phase_score_matrix,plot_phase_score_heatmap
+from metagene_helper import (
+    project_summary_metagene_creator,
+    plot_metagene_coverage,
+    metagene_profile_to_phase_score_matrix,
+    plot_phase_score_heatmap,
+)
 
 from project_helper import (
     get_projects,
@@ -248,4 +253,3 @@ def display_coherence_plot(srp, assembly):  # , state, n_clicks):
     metagene_dfs = project_summary_metagene_creator(project_summary_file)
     phase_score_df = metagene_profile_to_phase_score_matrix(metagene_dfs)
     return plot_phase_score_heatmap(phase_score_df)
-

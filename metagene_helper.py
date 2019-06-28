@@ -52,11 +52,10 @@ def metagene_profile_to_phase_score_matrix(metagene_dfs):
     phase_score_merged_df = pd.DataFrame()
     for sample_name, metagene_df in metagene_dfs.items():
         # Pull out the profile of coverage
-        phase_score_df = metagene_df[['phase_score']]
+        phase_score_df = metagene_df[["phase_score"]]
         phase_score_df.columns = [sample_name]
-        phase_score_merged_df = phase_score_merged_df.join(phase_score_df, how='outer')
+        phase_score_merged_df = phase_score_merged_df.join(phase_score_df, how="outer")
     return phase_score_merged_df.T
-
 
 
 def project_summary_metagene_creator(project_summary_file):
@@ -222,13 +221,23 @@ def plot_phase_score_heatmap(phase_score_df):
         return
 
     phase_scores = np.around(phase_scores, decimals=2)
-    fig = ff.create_annotated_heatmap(phase_scores, x=fragment_lengths, y=sample_names, annotation_text=phase_scores, colorscale=[[0.0, 'rgb(255,224,144)'], [0.428, 'rgb(255,224,144)'], [1.0, 'rgb(165, 0, 38)']]) #colorscale="RdBu")
+    fig = ff.create_annotated_heatmap(
+        phase_scores,
+        x=fragment_lengths,
+        y=sample_names,
+        annotation_text=phase_scores,
+        colorscale=[
+            [0.0, "rgb(255,224,144)"],
+            [0.428, "rgb(255,224,144)"],
+            [1.0, "rgb(165, 0, 38)"],
+        ],
+    )  # colorscale="RdBu")
     fig["layout"].update(
-        height=max(40 * len(sample_names), 500), autosize=False, title="Phase Score heatmap"
+        height=max(40 * len(sample_names), 500),
+        autosize=False,
+        title="Phase Score heatmap",
     )
     fig["layout"].update(scene=dict(aspectmode="data"))
-    fig["layout"].update(
-        font=dict(family="Arial", size=28)
-    )
+    fig["layout"].update(font=dict(family="Arial", size=28))
     fig["layout"].update(showlegend=False)
     return fig
