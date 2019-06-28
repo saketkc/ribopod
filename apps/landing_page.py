@@ -1,13 +1,18 @@
+import os
+
 import dash_core_components as dcc
 import dash_html_components as html
 
+from dash.dependencies import Input, Output, State
 import dash_table as dt
-from dash.dependencies import Input, Output
+import flask
+from flask import send_file
 
-from dash.dependencies import State
 from init import __DATASETS__
 from init import __SPECIES__
 
+from app_multipage import app
+from dash_helper import generate_table, path_leaf
 from fragment_length_helper import (
     parse_ribotricer_bam_summary,
     project_summary_read_length_creator,
@@ -26,9 +31,6 @@ from project_helper import (
     get_srp_read_lengths,
     get_project_summary_file,
 )
-
-from dash_helper import generate_table
-from app_multipage import app
 
 layout = html.Div(
     [
@@ -126,11 +128,17 @@ layout = html.Div(
                 html.Div(
                     [
                         html.Div(
-                            [dcc.Graph(id="coherence-heatmap", style={"margin-right": "auto", "margin-left": "auto", "width": "50%", })],
-                            style={
-                                "width": "100%",
-                                "display": "inline-block",
-                            },
+                            [
+                                dcc.Graph(
+                                    id="coherence-heatmap",
+                                    style={
+                                        "margin-right": "auto",
+                                        "margin-left": "auto",
+                                        "width": "50%",
+                                    },
+                                )
+                            ],
+                            style={"width": "100%", "display": "inline-block"},
                         )
                     ]
                 )
@@ -252,3 +260,12 @@ def display_coherence_plot(srp, assembly):  # , state, n_clicks):
     metagene_dfs = project_summary_metagene_creator(project_summary_file)
     phase_score_df = metagene_profile_to_phase_score_matrix(metagene_dfs)
     return plot_phase_score_heatmap(phase_score_df)
+
+
+@app.server.route("/download")
+def serve_static():
+    path = flask.request.args.get("value")
+    filename = path_leaf(path)
+    return send_file(
+        path, mimetype="text/csv", attachment_filename=filename, as_attachment=True
+    )

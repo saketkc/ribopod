@@ -1,4 +1,11 @@
+import ntpath
 import dash_html_components as html
+
+
+def path_leaf(path):
+    """Get path's tail from a filepath"""
+    head, tail = ntpath.split(path)
+    return tail or ntpath.basename(head)
 
 
 def generate_table(dataframe):
@@ -21,7 +28,12 @@ def generate_table(dataframe):
             # columns you want to show links for
             # and what you want those links to be
             if col == "ribotricer_orfs" and value:
-                cell = html.Td(html.A(href=value, children="Download"))
+                try:
+                    cell = html.Td(
+                        html.A(href="/download?value=" + value, children="Download")
+                    )
+                except:
+                    print(value)
             else:
                 cell = html.Td(children=value)
             row.append(cell)
