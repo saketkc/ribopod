@@ -42,7 +42,6 @@ layout = html.Div(
                 html.Hr(),
             ]
         ),
-        html.Div(id="srametadata-table"),
         html.Div(id="datatable-interactivity-container"),
         html.Div(
             [
@@ -127,18 +126,58 @@ layout = html.Div(
             [
                 html.Div(
                     [
-                        html.Div(
-                            [
-                                dcc.Graph(
-                                    id="coherence-heatmap",
-                                    style={
-                                        "margin-right": "auto",
-                                        "margin-left": "auto",
-                                        "width": "50%",
-                                    },
-                                )
+                        dcc.Tabs(
+                            id="tabs-div",
+                            value="tab-phase-score",
+                            children=[
+                                dcc.Tab(label="Metadata",
+                                        value="tab-sra-metadata",
+                                        children= [html.Div(
+                                            html.Div(id="srametadata-table"),
+                                            style={
+                                                "width": "100%",
+                                                "display": "inline-block",
+                                            },
+                                        )
+                                        ]
+                                        ),
+                                dcc.Tab(
+                                    label="Phase Score",
+                                    value="tab-phase-score",
+                                    children=[
+                                        html.Div(
+                                            [
+                                                html.Div(
+                                                    [
+                                                        dcc.Graph(
+                                                            id="coherence-heatmap",
+                                                            style={
+                                                                "margin-right": "auto",
+                                                                "margin-left": "auto",
+                                                                "width": "50%",
+                                                            },
+                                                        )
+                                                    ],
+                                                    style={
+                                                        "width": "100%",
+                                                        "display": "inline-block",
+                                                    },
+                                                )
+                                            ]
+                                        )
+                                    ],
+                                ),
+                                dcc.Tab(
+                                    label="Distribution of ORFs",
+                                    value="tab-orf-dist",
+                                    children=[html.Div([])],
+                                ),
+                                dcc.Tab(
+                                    label="Distribution of read counts",
+                                    value="tab-count-dist",
+                                    children=[html.Div([])],
+                                ),
                             ],
-                            style={"width": "100%", "display": "inline-block"},
                         )
                     ]
                 )
@@ -245,6 +284,15 @@ def display_read_length_dist_plot(srp, assembly):
     )
 
 
+@app.server.route("/download")
+def serve_static():
+    path = flask.request.args.get("value")
+    filename = path_leaf(path)
+    return send_file(
+        path, mimetype="text/csv", attachment_filename=filename, as_attachment=True
+    )
+
+
 @app.callback(
     Output("coherence-heatmap", "figure"),
     [Input("srp", "value"), Input("assembly", "value")],
@@ -260,12 +308,3 @@ def display_coherence_plot(srp, assembly):  # , state, n_clicks):
     metagene_dfs = project_summary_metagene_creator(project_summary_file)
     phase_score_df = metagene_profile_to_phase_score_matrix(metagene_dfs)
     return plot_phase_score_heatmap(phase_score_df)
-
-
-@app.server.route("/download")
-def serve_static():
-    path = flask.request.args.get("value")
-    filename = path_leaf(path)
-    return send_file(
-        path, mimetype="text/csv", attachment_filename=filename, as_attachment=True
-    )
