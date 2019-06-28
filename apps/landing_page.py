@@ -126,12 +126,10 @@ layout = html.Div(
                 html.Div(
                     [
                         html.Div(
-                            [dcc.Graph(id="coherence-heatmap")],
+                            [dcc.Graph(id="coherence-heatmap", style={"margin-right": "auto", "margin-left": "auto", "width": "50%", })],
                             style={
                                 "width": "100%",
                                 "display": "inline-block",
-                                "height": "100%",
-                                "align": "center",
                             },
                         )
                     ]
@@ -152,6 +150,7 @@ layout = html.Div(
                         ),
                         html.Div(
                             [dcc.Graph(id="metagene-plot")],
+                            className="row",
                             style={
                                 "display": "inline-block",
                                 "width": "49%",

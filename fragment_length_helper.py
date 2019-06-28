@@ -131,10 +131,9 @@ def plot_read_length_distribution(
             index += 1
     fig["layout"].update(
         height=max(200 * len(list(read_lengths.keys())), 400),
-        width=1000,
         title="Read length distribution",
     )
     # fig['layout'].update(scene=dict(aspectmode="data"))
-    fig["layout"].update(font=dict(family="Arial", size=28, color="#000000"))
+    fig["layout"].update(font=dict(family="Arial", size=18, color="#000000"))
     fig["layout"].update(showlegend=False)
     return fig

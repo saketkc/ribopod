@@ -197,9 +197,9 @@ def plot_metagene_coverage(
         width=1000,
         title="Metagene distribution",
     )
-    fig["layout"].update(font=dict(family="Arial", size=28, color="#000000"))
+    fig["layout"].update(font=dict(family="Arial", size=18, color="#000000"))
     for i in fig["layout"]["annotations"]:
-        i["font"] = dict(size=28)  # ,color='#ff0000')
+        i["font"] = dict(size=18)  # ,color='#ff0000')
     fig["layout"].update(showlegend=False)
     return fig
 
@@ -233,11 +233,12 @@ def plot_phase_score_heatmap(phase_score_df):
         ],
     )  # colorscale="RdBu")
     fig["layout"].update(
-        height=max(40 * len(sample_names), 500),
-        autosize=False,
+        height=300,#min(10 * len(sample_names), 400),
+        #autosize=True,
+        #        automargin=True,
         title="Phase Score heatmap",
     )
-    fig["layout"].update(scene=dict(aspectmode="data"))
-    fig["layout"].update(font=dict(family="Arial", size=28))
-    fig["layout"].update(showlegend=False)
+    #fig["layout"].update(scene=dict(aspectmode="data"))
+    fig["layout"].update(font=dict(family="Arial", size=18), yaxis=dict(side="left", position=0, automargin=True))
+    #fig["layout"].update(showlegend=False)
     return fig
