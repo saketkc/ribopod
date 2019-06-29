@@ -137,10 +137,14 @@ layout = html.Div(
                                         html.Div(
                                             html.Div(
                                                 id="srametadata-table",
-                                                style={"overflowX": "scroll"},
+                                                style={
+                                                    "overflowX": "scroll",
+                                                    "overflowY": "scroll",
+                                                },
                                             ),
                                             style={
                                                 "width": "100%",
+                                                "height": "30%",
                                                 "display": "inline-block",
                                             },
                                         )
@@ -172,12 +176,25 @@ layout = html.Div(
                                 dcc.Tab(
                                     label="Distribution of ORFs",
                                     value="tab-orf-dist",
-                                    children=[html.Div([])],
+                                    children=[
+                                        html.Div(
+                                            [
+                                                html.Div(
+                                                    ["In Progress..."],
+                                                    style={
+                                                        "width": "100%",
+                                                        "align": "center",
+                                                        "display": "inline-block",
+                                                    },
+                                                )
+                                            ]
+                                        )
+                                    ],
                                 ),
                                 dcc.Tab(
                                     label="Distribution of read counts",
                                     value="tab-count-dist",
-                                    children=[html.Div([])],
+                                    children=[html.Div([html.Div(["In Progress..."])])],
                                 ),
                             ],
                         )
