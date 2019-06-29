@@ -54,7 +54,6 @@ def get_srp_read_lengths(datasets, srp):
     -------
     fragment_lengths: list(dict)
     """
-    print(srp)
     dataset = datasets[datasets.srp == srp].iloc[0]
     fragment_lengths = eval(dataset.fragment_lengths)
     return [{"label": length, "value": length} for length in fragment_lengths]

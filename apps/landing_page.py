@@ -130,17 +130,22 @@ layout = html.Div(
                             id="tabs-div",
                             value="tab-phase-score",
                             children=[
-                                dcc.Tab(label="Metadata",
-                                        value="tab-sra-metadata",
-                                        children= [html.Div(
-                                            html.Div(id="srametadata-table"),
+                                dcc.Tab(
+                                    label="Metadata",
+                                    value="tab-sra-metadata",
+                                    children=[
+                                        html.Div(
+                                            html.Div(
+                                                id="srametadata-table",
+                                                style={"overflowX": "scroll"},
+                                            ),
                                             style={
                                                 "width": "100%",
                                                 "display": "inline-block",
                                             },
                                         )
-                                        ]
-                                        ),
+                                    ],
+                                ),
                                 dcc.Tab(
                                     label="Phase Score",
                                     value="tab-phase-score",
@@ -154,14 +159,11 @@ layout = html.Div(
                                                             style={
                                                                 "margin-right": "auto",
                                                                 "margin-left": "auto",
-                                                                "width": "50%",
+                                                                "width": "100%",
                                                             },
                                                         )
                                                     ],
-                                                    style={
-                                                        "width": "100%",
-                                                        "display": "inline-block",
-                                                    },
+                                                    style={"width": "100%"},
                                                 )
                                             ]
                                         )

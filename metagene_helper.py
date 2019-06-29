@@ -95,7 +95,7 @@ def project_summary_metagene_creator(project_summary_file):
 def plot_metagene_coverage(
     metagene_dfs,
     fragment_length,
-    position_range=np.arange(-20, 120),
+    position_range=range(-20, 121),
     samples_per_row=1,
     plot_type="bar",
     normalize_per_codon=False,
@@ -136,7 +136,7 @@ def plot_metagene_coverage(
 
         profile = row.profile
         if position_range != "default":
-            profile = profile[position_range]
+            profile = profile.loc[position_range]
         else:
             position_range = profile.index
         if plot_type == "bar":
@@ -227,14 +227,25 @@ def plot_phase_score_heatmap(phase_score_df):
         y=sample_names,
         annotation_text=phase_scores,
         colorscale=[
-            [0.0, "rgb(255,224,144)"],
-            [0.428, "rgb(255,224,144)"],
-            [1.0, "rgb(165, 0, 38)"],
-        ],
+            (0.0, "#eaedfb"),
+            (0.42, "#dce2f8"),
+            (0.5, "#cfd6f5"),
+            (0.6, "#c1cbf3"),
+            (0.7, "#b4bff0"),
+            (0.7, "#a6b4ed"),
+            (0.9, "#99a8ea"),
+            (1.0, "#8b9de8"),
+        ]
+        #    [0.0, "rgb(255,224,144)"],
+        #    [0.214, "rgb(255,224,144)"],
+        #    [0.428, "rgb(255,224,144)"],
+        #    [0.642, "rgb(165, 0, 38)"],
+        #    [1.0, "rgb(165, 0, 38)"],
+        # ],
     )  # colorscale="RdBu")
     fig["layout"].update(
-        height=max(20 * len(sample_names), 400),
-        # autosize=True,
+        height=max(40 * len(sample_names), 400),
+        autosize=True,
         #        automargin=True,
         title="Phase Score heatmap",
     )

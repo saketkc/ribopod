@@ -27,7 +27,18 @@ def generate_table(dataframe):
             # update this depending on which
             # columns you want to show links for
             # and what you want those links to be
-            if col == "ribotricer_orfs" and value:
+            if (
+                col
+                in [
+                    "ribotricer_orfs",
+                    "ribotricer_metagene_5p",
+                    "ribotricer_metagene_3p",
+                    "ribotricer_metagene_plot",
+                    "ribotricer_protocol",
+                    "ribotricer_bam_summary",
+                ]
+                and str(value) != "nan"
+            ):
                 try:
                     cell = html.Td(
                         html.A(href="/download?value=" + value, children="Download")
