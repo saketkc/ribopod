@@ -54,8 +54,9 @@ def metagene_profile_to_phase_score_matrix(metagene_dfs):
         # Pull out the profile of coverage
         phase_score_df = metagene_df[["phase_score"]]
         phase_score_df.columns = [sample_name]
-        phase_score_merged_df = phase_score_merged_df.join(phase_score_df, how="outer")
-    return phase_score_merged_df.T
+        phase_score_merged_df = phase_score_merged_df.join(phase_score_df, how="outer").sort_index()
+    # plotly does the other way round?
+    return phase_score_merged_df.T.sort_index(ascending=False)
 
 
 def project_summary_metagene_creator(project_summary_file):
