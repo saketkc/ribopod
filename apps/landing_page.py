@@ -1,10 +1,7 @@
-import os
-
 import dash_core_components as dcc
 import dash_html_components as html
 
-from dash.dependencies import Input, Output, State
-import dash_table as dt
+from dash.dependencies import Input, Output
 import flask
 from flask import send_file
 
@@ -59,7 +56,7 @@ layout = html.Div(
                 html.Div(
                     [
                         html.Label("SRP: "),
-                        dcc.Dropdown(options={}, value=None, id="srp"),
+                        dcc.Dropdown(options=[], value=None, id="srp"),
                     ],
                     style={
                         "width": "25%",
@@ -90,7 +87,11 @@ layout = html.Div(
                         html.Div(
                             [
                                 html.Label("Read length for metagene plot: "),
-                                dcc.Dropdown(options=28, value=28, id="read_length"),
+                                dcc.Dropdown(
+                                    options=[{"label": 28, "value": 28}],
+                                    value=28,
+                                    id="read_length",
+                                ),
                             ],
                             style={
                                 "width": "25%",
@@ -104,11 +105,11 @@ layout = html.Div(
                                     options=[
                                         {
                                             "label": "Codon level normalization (automatically de-trends)",
-                                            "value": True,
+                                            "value": "True",
                                         }
                                     ],
                                     id="normalize-chk",
-                                    values=[False],
+                                    value=[],
                                 )
                             ],
                             style={
@@ -253,7 +254,7 @@ def update_project_dropdown(assembly):
 @app.callback(Output("srp", "value"), [Input("srp", "options")])
 def update_srp_value(srp):
     if len(srp) != 0:
-        return srp[0]
+        return srp[0]["value"]
     else:
         return None
 
@@ -267,6 +268,7 @@ def generate_read_length_dropdown(srp, assembly):
         assembly = assembly["value"]
     if isinstance(srp, dict):
         srp = srp["value"]
+    options = get_srp_read_lengths(__DATASETS__, srp)
     return get_srp_read_lengths(__DATASETS__, srp)
 
 
@@ -275,7 +277,7 @@ def generate_read_length_dropdown(srp, assembly):
     [
         Input("srp", "value"),
         Input("assembly", "value"),
-        Input("normalize-chk", "values"),
+        Input("normalize-chk", "value"),
         Input("read_length", "value"),
     ],
 )
@@ -284,7 +286,7 @@ def display_metagene_plot(srp, assembly, normalize, length):  # gene_name, n_cli
         srp = srp["value"]
     project_summary_file = get_project_summary_file(__DATASETS__, srp)
     metagene_dfs = project_summary_metagene_creator(project_summary_file)
-    return plot_metagene_coverage(metagene_dfs, length)
+    return plot_metagene_coverage(metagene_dfs, length, normalize_per_codon=normalize)
 
 
 @app.callback(

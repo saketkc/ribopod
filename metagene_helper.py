@@ -10,6 +10,41 @@ import plotly.figure_factory as ff
 __FRAME_COLORS__ = ["#fc8d62", "#66c2a5", "#8da0cb"]
 
 
+def _normalize_profile_values(profile):
+    normalized_values = []
+    coverage_list = profile.values.tolist()
+    for i in np.arange(0, len(coverage_list), 3):
+        if i + 2 < len(coverage_list):
+            if coverage_list[i] == 0:
+                normalized_values += [
+                    coverage_list[i],
+                    coverage_list[i + 1],
+                    coverage_list[i + 2],
+                ]
+            else:
+                normalized_values += [
+                    1.0,
+                    coverage_list[i + 1] / coverage_list[i],
+                    coverage_list[i + 2] / coverage_list[i],
+                ]
+
+        elif i + 2 <= len(coverage_list):
+            if coverage_list[i] == 0:
+                normalized_values += [coverage_list[i], coverage_list[i + 1]]
+            else:
+                normalized_values += [1.0, coverage_list[i + 1] / coverage_list[i]]
+        elif i + 1 <= len(coverage_list):
+            if coverage_list[i] == 0:
+                normalized_values += [0]
+            else:
+                normalized_values += [1.0]
+        elif i <= len(coverage_list):
+            profile = pd.Series(normalized_values, index=profile.index.tolist())
+            break
+    normalized_profile = pd.Series(normalized_values, index=profile.index.tolist())
+    return normalized_profile
+
+
 def parse_metagene_profile(file_path):
     """Parse metagene profile file
 
@@ -143,6 +178,10 @@ def plot_metagene_coverage(
         else:
             position_range = profile.index
         if plot_type == "bar":
+
+            if normalize_per_codon:
+                profile = _normalize_profile_values(profile)
+
             frame0 = profile[profile.index % 3 == 0]
             frame1 = profile[profile.index % 3 == 1]
             frame2 = profile[profile.index % 3 == 2]

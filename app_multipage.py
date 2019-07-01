@@ -1,7 +1,8 @@
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-import dash_table_experiments as dt
+
+# import dash_table_experiments as dt
 
 from dash.dependencies import Output
 from dash.dependencies import Input
@@ -13,19 +14,18 @@ external_css = [
     "//fonts.googleapis.com/css?family=Raleway:400,300,600",
     "//fonts.googleapis.com/css?family=Dosis:Medium",
     "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
+    "https://codepen.io/chriddyp/pen/bWLwgP.css",
+    "https://codepen.io/chriddyp/pen/brPBPO.css",
 ]
 
-app = dash.Dash(name="ribopod", title="ribopod : Visualizing ribo-seq datasets")
-app.config.supress_callback_exceptions = True
+app = dash.Dash(name="ribopod")  # title="ribopod : Visualizing ribo-seq datasets")
 app.title = "ribopod : Visualizing ribo-seq datasets"
 
 for css in external_css:
     app.css.append_css({"external_url": css})
-app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
-
+# app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
 # Loading screen CSS
-app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/brPBPO.css"})
-
+# app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/brPBPO.css"})
 # Datatable CSS
 # app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
 
