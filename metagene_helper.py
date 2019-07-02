@@ -61,7 +61,14 @@ def parse_metagene_profile(file_path):
     """
     # fragment_length	offset_5p	profile	phase_score	valid_codons
     # Set the index on fragment length for easy retrieval
-    metagene_df = pd.read_csv(file_path, sep="\t").set_index("fragment_length")
+    metagene_df = pd.read_csv(file_path, sep="\t")
+    if len(metagene_df.columns) == 3:
+        # Re-read the tsv this time with no headers
+        # old ribotricer output came with no headers
+        metagene_df = pd.read_csv(file_path, header=None, sep="\t")
+        metagene_df.columns = ["fragment_length", "offset_5p", "profile"]
+    metagene_df["fragment_length"] = metagene_df["fragment_length"].astype(int)
+    metagene_df = metagene_df.set_index("fragment_length")
     metagene_df["profile"] = [eval(profile) for profile in metagene_df.profile]
     metagene_df["profile"] = [
         pd.Series(profile, index=range(-offset_5p, len(profile) - offset_5p))
@@ -115,18 +122,18 @@ def project_summary_metagene_creator(project_summary_file):
         .set_index("experiment_accession")
         .sort_index()
     )
-    summary_df = summary_df[
+
+    # Make sure these are not none
+    summary_df = summary_df.loc[
         summary_df.ribotricer_metagene_5p == summary_df.ribotricer_metagene_5p
+    ]
+    summary_df = summary_df.loc[
+        summary_df.ribotricer_orfs == summary_df.ribotricer_orfs
     ]
     metagene_dfs = OrderedDict()
     for sample_name, row in summary_df.iterrows():
         # Load the 5' tsv
-        if row.ribotricer_metagene_5p:
-            metagene_dfs[sample_name] = parse_metagene_profile(
-                row.ribotricer_metagene_5p
-            )
-        else:
-            metagene_dfs[sample_name] = pd.DataFrame()
+        metagene_dfs[sample_name] = parse_metagene_profile(row.ribotricer_metagene_5p)
     return metagene_dfs
 
 
@@ -169,7 +176,10 @@ def plot_metagene_coverage(
         # Pull out the profile of coverage
         try:
             row = metagene_df.loc[fragment_length]
+            print(sample_name, fragment_length)
         except KeyError:
+            index += 1
+            print("Skipped {} for {}".format(fragment_length, sample_name))
             continue
 
         profile = row.profile

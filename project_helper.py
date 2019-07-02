@@ -16,7 +16,8 @@ def get_projects(datasets, species):
     projects: list
               List of projects available for given species
     """
-    projects = datasets.loc[species].srp.tolist()
+    print("Projects: {}".format(datasets.loc[species]))
+    projects = datasets.loc[datasets.index == species].srp.tolist()
     projects = [{"label": project, "value": project} for project in projects]
     return projects
 
@@ -36,6 +37,8 @@ def get_srp_table(datasets, srp):
     table: dash.html_table
            Metadata table for SRP
     """
+    print("############### SRP : {}".format(srp))
+    print(datasets[datasets.srp == srp])
     dataset = datasets[datasets.srp == srp].iloc[0]
     srp_metadata = pd.read_csv(dataset.project_metadata_path, sep="\t")
     return srp_metadata

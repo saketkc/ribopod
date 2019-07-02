@@ -16,6 +16,7 @@ external_css = [
     "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
     "https://codepen.io/chriddyp/pen/bWLwgP.css",
     "https://codepen.io/chriddyp/pen/brPBPO.css",
+    "https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css",
 ]
 
 app = dash.Dash(name="ribopod")  # title="ribopod : Visualizing ribo-seq datasets")
@@ -29,6 +30,11 @@ for css in external_css:
 # Datatable CSS
 # app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
 
+# Dash CSS
+app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
+# Loading screen CSS
+app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/brPBPO.css"})
+
 external_js = ["https://code.jquery.com/jquery-3.2.1.min.js"]
 
 for js in external_js:
@@ -36,4 +42,5 @@ for js in external_js:
 
 # app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 server = app.server
+app.scripts.config.serve_locally = True
 app.config.suppress_callback_exceptions = True

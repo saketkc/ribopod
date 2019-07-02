@@ -45,7 +45,12 @@ layout = html.Div(
                 html.Div(
                     [
                         html.Label("Species: "),
-                        dcc.Dropdown(options=__SPECIES__, value="hg38", id="assembly"),
+                        dcc.Dropdown(
+                            options=__SPECIES__,
+                            value="SC5314",
+                            id="assembly",
+                            searchable=True,
+                        ),
                     ],
                     style={
                         "width": "25%",
@@ -56,7 +61,7 @@ layout = html.Div(
                 html.Div(
                     [
                         html.Label("SRP: "),
-                        dcc.Dropdown(options=[], value=None, id="srp"),
+                        dcc.Dropdown(options=[], value=[], id="srp", searchable=True),
                     ],
                     style={
                         "width": "25%",
@@ -86,10 +91,11 @@ layout = html.Div(
                     [
                         html.Div(
                             [
-                                html.Label("Read length for metagene plot: "),
+                                html.Label("Fragment length for metagene plot: "),
                                 dcc.Dropdown(
-                                    options=[{"label": 28, "value": 28}],
+                                    options=[],
                                     value=28,
+                                    searchable=True,
                                     id="read_length",
                                 ),
                             ],
@@ -159,13 +165,23 @@ layout = html.Div(
                                             [
                                                 html.Div(
                                                     [
-                                                        dcc.Graph(
-                                                            id="coherence-heatmap",
-                                                            style={
-                                                                "margin-right": "auto",
-                                                                "margin-left": "auto",
-                                                                "width": "100%",
-                                                            },
+                                                        dcc.Loading(
+                                                            id="loading-coherence-heatmap",
+                                                            children=[
+                                                                html.Div(
+                                                                    [
+                                                                        dcc.Graph(
+                                                                            id="coherence-heatmap",
+                                                                            style={
+                                                                                "margin-right": "auto",
+                                                                                "margin-left": "auto",
+                                                                                "width": "100%",
+                                                                            },
+                                                                        )
+                                                                    ]
+                                                                )
+                                                            ],
+                                                            type="circle",
                                                         )
                                                     ],
                                                     style={"width": "100%"},
@@ -208,7 +224,15 @@ layout = html.Div(
                 html.Div(
                     [
                         html.Div(
-                            [dcc.Graph(id="length-dist-plot")],
+                            [
+                                dcc.Loading(
+                                    id="loading-length-dist-plot",
+                                    children=[
+                                        html.Div([dcc.Graph(id="length-dist-plot")])
+                                    ],
+                                    type="graph",
+                                )
+                            ],
                             style={
                                 "display": "inline-block",
                                 "width": "49%",
@@ -216,8 +240,15 @@ layout = html.Div(
                             },
                         ),
                         html.Div(
-                            [dcc.Graph(id="metagene-plot")],
-                            className="row",
+                            [
+                                dcc.Loading(
+                                    id="loading-metagene-plot",
+                                    children=[
+                                        html.Div([dcc.Graph(id="metagene-plot")])
+                                    ],
+                                    type="graph",
+                                )
+                            ],
                             style={
                                 "display": "inline-block",
                                 "width": "49%",
@@ -256,7 +287,7 @@ def update_srp_value(srp):
     if len(srp) != 0:
         return srp[0]["value"]
     else:
-        return None
+        return []
 
 
 @app.callback(
