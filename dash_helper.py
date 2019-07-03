@@ -20,13 +20,22 @@ def generate_table(dataframe):
     table: html.Table
     """
     rows = []
+    cols_to_retain = [
+        "experiment_accession",
+        "experiment_title",
+        "run_accession",
+        "ribotricer_orf",
+        "ribotricer_metagene_5p",
+        "ribotricer_metagene_3p",
+        "ribotricer_metagene_plot",
+        "ribotricer_protocol",
+        "ribotricer_bam_summary",
+    ]
+    dataframe = dataframe.loc[:, cols_to_retain]
     for i in range(len(dataframe)):
         row = []
         for col in dataframe.columns:
             value = dataframe.iloc[i][col]
-            # update this depending on which
-            # columns you want to show links for
-            # and what you want those links to be
             if (
                 col
                 in [
@@ -41,7 +50,11 @@ def generate_table(dataframe):
             ):
                 try:
                     cell = html.Td(
-                        html.A(href="/download?value=" + value, children="Download")
+                        html.A(
+                            href="/download?value=" + value,
+                            children=[html.I(className="fa fa-download")],
+                        ),
+                        style={"text-align": "center"},
                     )
                 except:
                     print(value)
@@ -51,6 +64,12 @@ def generate_table(dataframe):
         rows.append(html.Tr(row))
     return html.Table(
         # Header
-        [html.Tr([html.Th(col) for col in dataframe.columns])]
-        + rows
+        [html.Tr([html.Th(col) for col in dataframe.columns])] + rows,
+        style={
+            "width": "100%",
+            "margin-right": "auto",
+            "margin-left": "25%",
+            "align": "center",
+            "display": "inline-block",
+        },
     )

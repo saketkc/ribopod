@@ -145,8 +145,12 @@ layout = html.Div(
                                             html.Div(
                                                 id="srametadata-table",
                                                 style={
-                                                    "overflowX": "scroll",
-                                                    "overflowY": "scroll",
+                                                    # "overflowX": "scroll",
+                                                    # "overflowY": "scroll",
+                                                    "margin-right": "auto",
+                                                    "margin-left": "auto",
+                                                    "width": "100%",
+                                                    "text-align": "center",
                                                 },
                                             ),
                                             style={
