@@ -24,7 +24,7 @@ def generate_table(dataframe):
         "experiment_accession",
         "experiment_title",
         "run_accession",
-        "ribotricer_orf",
+        "ribotricer_orfs",
         "ribotricer_metagene_5p",
         "ribotricer_metagene_3p",
         "ribotricer_metagene_plot",
@@ -68,7 +68,7 @@ def generate_table(dataframe):
         style={
             "width": "100%",
             "margin-right": "auto",
-            "margin-left": "25%",
+            "margin-left": "10%",
             "align": "center",
             "display": "inline-block",
         },
