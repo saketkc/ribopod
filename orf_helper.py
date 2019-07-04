@@ -8,7 +8,7 @@ from plotly.graph_objs import Bar, Figure, Layout
 import plotly.figure_factory as ff
 
 
-def orf_counts_stacked_bar(orf_counts_df):
+def plot_orf_counts_stacked_bar(df):
     """Create stacked bar charts showing number of actively translating uORFs/ORFs/dORFs.
 
     Parameters
@@ -16,6 +16,15 @@ def orf_counts_stacked_bar(orf_counts_df):
     orf_counts_df: DataFrame
                 table with index as the sample name and columns as # of uORF/dORF/
     """
+    orf_counts_df = pd.pivot_table(
+        df,
+        columns=["ORF_type", "status"],
+        index="experiment_accession",
+        values=["count"],
+    )[
+        "count"
+    ]  # .reset_index()
+
     columns = [
         "annotated",
         "super_uORF",
@@ -30,7 +39,9 @@ def orf_counts_stacked_bar(orf_counts_df):
     fig_data = []
     for column in columns:
         trace = Bar(
-            x=orf_counts_df.index, y=orf_counts_df[column].tolist(), name=column
+            x=orf_counts_df.index,
+            y=orf_counts_df[column]["translating"].tolist(),
+            name=column,
         )
         fig_data.append(trace)
     layout = Layout(barmode="stack")

@@ -59,6 +59,46 @@ def get_srp_read_lengths(datasets, srp):
     return [{"label": length, "value": length} for length in fragment_lengths]
 
 
+def get_summarized_phase_scores(datasets, srp):
+    """Read summarised_phase_scores as dataframe.
+
+    Parameters
+    ----------
+    datasets: pandas.DataFrame
+    srp: string
+         SRP ID
+
+    Returns
+    -------
+    phase_scores_df: pd.DataFrame
+    """
+    dataset = datasets[datasets.srp == srp].iloc[0]
+    phase_scores_df = pd.read_csv(dataset.summarized_phase_scores, sep="\t").set_index(
+        "ORF_ID"
+    )
+    return phase_scores_df
+
+
+def get_summarized_orf_counts(datasets, srp):
+    """Read summarized_orfs as dataframe.
+
+    Parameters
+    ----------
+    datasets: pandas.DataFrame
+    srp: string
+         SRP ID
+
+    Returns
+    -------
+    orf_counts_df: pd.DataFrame
+    """
+    dataset = datasets[datasets.srp == srp].iloc[0]
+    orf_counts_df = pd.read_csv(dataset.summarized_orfs, sep="\t").set_index(
+        "experiment_accession"
+    )
+    return orf_counts_df
+
+
 def get_project_summary_file(datasets, srp):
     """Get location of project's summary file.
 

@@ -27,7 +27,11 @@ from project_helper import (
     get_srp_table,
     get_srp_read_lengths,
     get_project_summary_file,
+    get_summarized_phase_scores,
+    get_summarized_orf_counts,
 )
+
+from orf_helper import plot_orf_counts_stacked_bar
 
 layout = html.Div(
     [
@@ -201,7 +205,30 @@ layout = html.Div(
                                         html.Div(
                                             [
                                                 html.Div(
-                                                    ["In Progress..."],
+                                                    [
+                                                        html.Div(
+                                                            [
+                                                                dcc.Loading(
+                                                                    id="loading-orf-count-dist-plot",
+                                                                    children=[
+                                                                        html.Div(
+                                                                            [
+                                                                                dcc.Graph(
+                                                                                    id="orf-count-dist-plot"
+                                                                                )
+                                                                            ]
+                                                                        )
+                                                                    ],
+                                                                    type="graph",
+                                                                )
+                                                            ],
+                                                            style={
+                                                                "display": "inline-block",
+                                                                "width": "49%",
+                                                                #'display': 'none',
+                                                            },
+                                                        )
+                                                    ],
                                                     style={
                                                         "width": "100%",
                                                         "align": "center",
@@ -364,3 +391,17 @@ def display_coherence_plot(srp, assembly):  # , state, n_clicks):
     metagene_dfs = project_summary_metagene_creator(project_summary_file)
     phase_score_df = metagene_profile_to_phase_score_matrix(metagene_dfs)
     return plot_phase_score_heatmap(phase_score_df)
+
+
+@app.callback(
+    Output("orf-count-dist-plot", "figure"),
+    [Input("srp", "value"), Input("assembly", "value")],
+)
+def display_orf_count_dist_plot(srp, assembly):  # , state, n_clicks):
+    if isinstance(srp, dict):
+        srp = srp["value"]
+    if isinstance(assembly, dict):
+        assembly = assembly["value"]
+    # get_summarized_phase_scores,
+    orf_df = get_summarized_orf_counts(__DATASETS__, srp)
+    return plot_orf_counts_stacked_bar(orf_df)
