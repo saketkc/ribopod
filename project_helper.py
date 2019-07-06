@@ -73,9 +73,9 @@ def get_summarized_phase_scores(datasets, srp):
     phase_scores_df: pd.DataFrame
     """
     dataset = datasets[datasets.srp == srp].iloc[0]
-    phase_scores_df = pd.read_csv(dataset.summarized_phase_scores, sep="\t").set_index(
-        "ORF_ID"
-    )
+    phase_scores_df = pd.read_csv(dataset.summarized_phase_scores, sep="\t")
+    print(phase_scores_df.head())
+    phase_scores_df = phase_scores_df.set_index("ORF_ID")
     return phase_scores_df
 
 

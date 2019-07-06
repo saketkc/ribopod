@@ -31,7 +31,7 @@ from project_helper import (
     get_summarized_orf_counts,
 )
 
-from orf_helper import plot_orf_counts_stacked_bar
+from orf_helper import plot_orf_counts_stacked_bar, plot_phase_scores_violin
 
 layout = html.Div(
     [
@@ -142,30 +142,6 @@ layout = html.Div(
                             value="tab-phase-score",
                             children=[
                                 dcc.Tab(
-                                    label="Metadata",
-                                    value="tab-sra-metadata",
-                                    children=[
-                                        html.Div(
-                                            html.Div(
-                                                id="srametadata-table",
-                                                style={
-                                                    # "overflowX": "scroll",
-                                                    # "overflowY": "scroll",
-                                                    "margin-right": "auto",
-                                                    "margin-left": "auto",
-                                                    "width": "100%",
-                                                    "text-align": "center",
-                                                },
-                                            ),
-                                            style={
-                                                "width": "100%",
-                                                "height": "30%",
-                                                "display": "inline-block",
-                                            },
-                                        )
-                                    ],
-                                ),
-                                dcc.Tab(
                                     label="Phase Score",
                                     value="tab-phase-score",
                                     children=[
@@ -206,43 +182,87 @@ layout = html.Div(
                                             [
                                                 html.Div(
                                                     [
-                                                        html.Div(
-                                                            [
-                                                                dcc.Loading(
-                                                                    id="loading-orf-count-dist-plot",
-                                                                    children=[
-                                                                        html.Div(
-                                                                            [
-                                                                                dcc.Graph(
-                                                                                    id="orf-count-dist-plot"
-                                                                                )
-                                                                            ]
+                                                        dcc.Loading(
+                                                            id="loading-orf-count-dist-plot",
+                                                            children=[
+                                                                html.Div(
+                                                                    [
+                                                                        dcc.Graph(
+                                                                            id="orf-count-dist-plot",
+                                                                            style={
+                                                                                "margin-right": "auto",
+                                                                                "margin-left": "auto",
+                                                                                "width": "100%",
+                                                                            },
                                                                         )
-                                                                    ],
-                                                                    type="graph",
+                                                                    ]
                                                                 )
                                                             ],
-                                                            style={
-                                                                "display": "inline-block",
-                                                                "width": "49%",
-                                                                #'display': 'none',
-                                                            },
+                                                            type="circle",
                                                         )
                                                     ],
-                                                    style={
-                                                        "width": "100%",
-                                                        "align": "center",
-                                                        "display": "inline-block",
-                                                    },
+                                                    style={"width": "100%"},
                                                 )
                                             ]
                                         )
                                     ],
                                 ),
                                 dcc.Tab(
-                                    label="Distribution of read counts",
-                                    value="tab-count-dist",
-                                    children=[html.Div([html.Div(["In Progress..."])])],
+                                    label="Distribution of Phase Scores",
+                                    value="tab-phase-score-dist",
+                                    children=[
+                                        html.Div(
+                                            [
+                                                html.Div(
+                                                    [
+                                                        dcc.Loading(
+                                                            id="loading-phase-scire-dist-plot",
+                                                            children=[
+                                                                html.Div(
+                                                                    [
+                                                                        dcc.Graph(
+                                                                            id="phase-score-dist-plot",
+                                                                            style={
+                                                                                "margin-right": "auto",
+                                                                                "margin-left": "auto",
+                                                                                "width": "100%",
+                                                                            },
+                                                                        )
+                                                                    ]
+                                                                )
+                                                            ],
+                                                            type="circle",
+                                                        )
+                                                    ],
+                                                    style={"width": "100%"},
+                                                )
+                                            ]
+                                        )
+                                    ],
+                                ),
+                                dcc.Tab(
+                                    label="Metadata",
+                                    value="tab-sra-metadata",
+                                    children=[
+                                        html.Div(
+                                            html.Div(
+                                                id="srametadata-table",
+                                                style={
+                                                    # "overflowX": "scroll",
+                                                    # "overflowY": "scroll",
+                                                    "margin-right": "auto",
+                                                    "margin-left": "auto",
+                                                    "width": "100%",
+                                                    "text-align": "center",
+                                                },
+                                            ),
+                                            style={
+                                                "width": "100%",
+                                                "height": "30%",
+                                                "display": "inline-block",
+                                            },
+                                        )
+                                    ],
                                 ),
                             ],
                         )
@@ -331,7 +351,7 @@ def generate_read_length_dropdown(srp, assembly):
     if isinstance(srp, dict):
         srp = srp["value"]
     options = get_srp_read_lengths(__DATASETS__, srp)
-    return get_srp_read_lengths(__DATASETS__, srp)
+    return options
 
 
 @app.callback(
@@ -405,3 +425,17 @@ def display_orf_count_dist_plot(srp, assembly):  # , state, n_clicks):
     # get_summarized_phase_scores,
     orf_df = get_summarized_orf_counts(__DATASETS__, srp)
     return plot_orf_counts_stacked_bar(orf_df)
+
+
+@app.callback(
+    Output("phase-score-dist-plot", "figure"),
+    [Input("srp", "value"), Input("assembly", "value")],
+)
+def display_phase_score_dist_plot(srp, assembly):  # , state, n_clicks):
+    if isinstance(srp, dict):
+        srp = srp["value"]
+    if isinstance(assembly, dict):
+        assembly = assembly["value"]
+    # get_summarized_phase_scores,
+    phase_scores_df = get_summarized_phase_scores(__DATASETS__, srp)
+    return plot_phase_scores_violin(phase_scores_df)
