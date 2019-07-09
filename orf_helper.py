@@ -34,6 +34,8 @@ def plot_orf_counts_stacked_bar(df):
     for column in columns:
         if column not in orf_counts_df.columns:
             continue
+        if "translating" not in orf_counts_df[column].keys():
+            continue
         trace = Bar(
             x=orf_counts_df.index,
             y=orf_counts_df[column]["translating"].tolist(),

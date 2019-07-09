@@ -81,9 +81,9 @@ def project_summary_read_length_creator(project_summary_file):
     summary_df = summary_df.loc[
         summary_df.ribotricer_metagene_5p == summary_df.ribotricer_metagene_5p
     ]
-    summary_df = summary_df.loc[
-        summary_df.ribotricer_orfs == summary_df.ribotricer_orfs
-    ]
+    #summary_df = summary_df.loc[
+    #    summary_df.ribotricer_orfs == summary_df.ribotricer_orfs
+    #]
     read_length_dist_dict = OrderedDict()
     for sample_name, row in summary_df.iterrows():
         # Load the 5' tsv
