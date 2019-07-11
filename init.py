@@ -18,3 +18,9 @@ __SPECIES__ = sorted(
     ],
     key=lambda species: species["label"],
 )
+
+
+def build_to_species(build):
+    for element in __SPECIES__:
+        if element["value"] == build:
+            return element["label"]
