@@ -5,9 +5,7 @@
 
 
 from collections import defaultdict
-from collections import OrderedDict
 
-import pysradb
 from pysradb import SRAdb
 import os
 import glob
@@ -40,7 +38,6 @@ def check_ribotricer_output_exists(srp, srx, assembly):
 
 def summarise_ribotricer_output_exists(path):
     df = pd.read_csv(path, sep="\t", use_cols=["ORF_ID"])
-    df_grouped
     return df
 
 
@@ -127,7 +124,7 @@ def check_summarized_phase_scores_exists(srp, assembly):
 
 def create_df_from_dir(rootdir):
     """Create a dataframe struture amenable fro ribotricer for samples with no metadata using their directory
-    
+
     Parameters
     ----------
     path: string
@@ -415,22 +412,6 @@ for root_dir in ROOT_DIRS:
             )
 
 
-def generate_tablex(dataframe, max_rows=26):
-    return html.Table(
-        # Header
-        [html.Tr([html.Th(col) for col in dataframe.columns])]
-        +
-        # Body
-        [
-            html.Tr([html.Td(dataframe.iloc[i][col]) for col in dataframe.columns])
-            for i in range(min(len(dataframe), max_rows))
-        ]
-    )
-
-
-# In[17]:
-
-
 __ASSEMBLY_WISE_SRP__ = defaultdict(list)
 __SRP_TO_ROOT_DIR_MAP__ = defaultdict(dict)
 for root_dir in ROOT_DIRS:
@@ -475,7 +456,6 @@ def get_fragment_lengths(file_path):
 
 db = SRAdb("/data2/SRAmetadb.sqlite")
 all_projects = []
-re_ribo_analysis_dir = "/data1/re-ribo-analysis"
 
 
 for species, sample_list in __ASSEMBLY_WISE_SRP__.items():
@@ -486,6 +466,7 @@ for species, sample_list in __ASSEMBLY_WISE_SRP__.items():
         )
         if not os.listdir(__SRP_TO_ROOT_DIR_MAP__[srp][species]):
             continue
+        print(srp, basedir)
         df = get_srp_table(srp, species, basedir)
         project_filepath = "{}/{}/{}".format(basedir, species, srp)
         metadata_filepath = "/data2/re-ribo-analysis-metadata/{}/{}.tsv".format(

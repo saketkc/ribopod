@@ -4,6 +4,7 @@ from dash.dependencies import Input, Output
 
 from app_multipage import app
 from apps import landing_page, visualize_page
+server = app.server
 
 app.layout = html.Div(
     [dcc.Location(id="url", refresh=False), html.Div(id="page-content")]
