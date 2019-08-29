@@ -21,7 +21,6 @@ __SPECIES__ = sorted(
         {"label": "E.colii (ecoli)", "value": "ASM584v2"},
         {"label": "P.falciparum (plasmodium falciparum)", "value": "Epr1"},
         {"label": "C.griseus (hamster)", "value": "CriGri_1.0"},
-
     ],
     key=lambda species: species["label"],
 )
