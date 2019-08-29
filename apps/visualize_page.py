@@ -366,7 +366,7 @@ def generate_read_length_dropdown(srp, assembly):
 def display_metagene_plot(srp, assembly, normalize, length):  # gene_name, n_clicks):
     if isinstance(srp, dict):
         srp = srp["value"]
-    project_summary_file = get_project_summary_file(__DATASETS__, srp)
+    project_summary_file = get_project_summary_file(__DATASETS__, srp, assembly)
     metagene_dfs = project_summary_metagene_creator(project_summary_file)
     return plot_metagene_coverage(metagene_dfs, length, normalize_per_codon=normalize)
 
@@ -380,7 +380,7 @@ def display_read_length_dist_plot(srp, assembly):
         srp = srp["value"]
     if isinstance(assembly, dict):
         assembly = assembly["value"]
-    project_summary_file = get_project_summary_file(__DATASETS__, srp)
+    project_summary_file = get_project_summary_file(__DATASETS__, srp, assembly)
     read_length_dist = project_summary_read_length_creator(project_summary_file)
     return plot_read_length_distribution(
         read_length_dist, shared_yaxes=False, plot_ridge=False
@@ -407,7 +407,7 @@ def display_coherence_plot(srp, assembly):  # , state, n_clicks):
         srp = srp["value"]
     if isinstance(assembly, dict):
         assembly = assembly["value"]
-    project_summary_file = get_project_summary_file(__DATASETS__, srp)
+    project_summary_file = get_project_summary_file(__DATASETS__, srp, assembly)
     metagene_dfs = project_summary_metagene_creator(project_summary_file)
     phase_score_df = metagene_profile_to_phase_score_matrix(metagene_dfs)
     return plot_phase_score_heatmap(phase_score_df)

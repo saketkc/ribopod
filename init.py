@@ -2,7 +2,6 @@ import pandas as pd
 
 __DATASET_PATH__ = "/data2/datasets.tsv"
 __DATASETS__ = pd.read_csv(__DATASET_PATH__, sep="\t").set_index("species")
-
 __SPECIES__ = sorted(
     [
         {"label": "H.sapiens (human)", "value": "hg38"},

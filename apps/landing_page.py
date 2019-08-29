@@ -18,7 +18,6 @@ import pandas as pd
 from plotly.graph_objs import Bar, Figure, Layout
 
 datasets_counts = __DATASETS__.index.value_counts().to_dict()
-print(datasets_counts)
 datasets_counts = {
     build_to_species(key): value for key, value in datasets_counts.items()
 }
@@ -113,5 +112,4 @@ layout = html.Div(
 )
 def display_click_data(click_data):
     data = json.dumps(click_data, indent=2)
-    print(data)
     return data

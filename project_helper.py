@@ -9,7 +9,7 @@ def get_projects(datasets, species):
     datasets: pandas.DataFrame
               datasets.tsv
     species: string
-             Assembly
+             species
 
     Returns
     -------
@@ -59,7 +59,7 @@ def get_srp_read_lengths(datasets, srp):
     return [{"label": length, "value": length} for length in fragment_lengths]
 
 
-def get_summarized_phase_scores(datasets, srp):
+def get_summarized_phase_scores(datasets, srp, species):
     """Read summarised_phase_scores as dataframe.
 
     Parameters
@@ -72,9 +72,7 @@ def get_summarized_phase_scores(datasets, srp):
     -------
     phase_scores_df: pd.DataFrame
     """
-    dataset = datasets[datasets.srp == srp].iloc[0]
-    phase_scores_df = pd.read_csv(dataset.summarized_phase_scores, sep="\t")
-    print(phase_scores_df.head())
+    dataset = datasets[(datasets.srp == srp) & (datasets.index == species) ].iloc[0]
     phase_scores_df = phase_scores_df.set_index("ORF_ID")
     return phase_scores_df
 
@@ -99,7 +97,7 @@ def get_summarized_orf_counts(datasets, srp):
     return orf_counts_df
 
 
-def get_project_summary_file(datasets, srp):
+def get_project_summary_file(datasets, srp, species):
     """Get location of project's summary file.
 
     Parameters
@@ -112,5 +110,5 @@ def get_project_summary_file(datasets, srp):
     -------
     file_path: string
     """
-    dataset = datasets[datasets.srp == srp].iloc[0]
+    dataset = datasets[(datasets.srp == srp) & (datasets.index == species) ].iloc[0]
     return dataset.project_metadata_path
