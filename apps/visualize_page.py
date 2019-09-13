@@ -423,8 +423,9 @@ def display_orf_count_dist_plot(srp, assembly):  # , state, n_clicks):
     if isinstance(assembly, dict):
         assembly = assembly["value"]
     # get_summarized_phase_scores,
-    orf_df = get_summarized_orf_counts(__DATASETS__, srp)
-    return plot_orf_counts_stacked_bar(orf_df)
+    orf_df = get_summarized_orf_counts(__DATASETS__, srp, assembly)
+    if orf_df:
+        return plot_orf_counts_stacked_bar(orf_df)
 
 
 @app.callback(
@@ -437,5 +438,5 @@ def display_phase_score_dist_plot(srp, assembly):  # , state, n_clicks):
     if isinstance(assembly, dict):
         assembly = assembly["value"]
     # get_summarized_phase_scores,
-    phase_scores_df = get_summarized_phase_scores(__DATASETS__, srp)
+    phase_scores_df = get_summarized_phase_scores(__DATASETS__, srp, assembly)
     return plot_phase_scores_violin(phase_scores_df)

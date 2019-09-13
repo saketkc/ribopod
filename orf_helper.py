@@ -55,7 +55,8 @@ def plot_phase_scores_violin(phase_score_df):
     phase_score_df: DataFrame
                     table withindex as ORF ID and columns as phase scores
     """
-
+    if not phase_score_df:
+        return None
     columns = sorted(phase_score_df.columns.tolist())
     fig_data = []
     for column in columns:

@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 
 
@@ -72,12 +73,15 @@ def get_summarized_phase_scores(datasets, srp, species):
     -------
     phase_scores_df: pd.DataFrame
     """
-    dataset = datasets[(datasets.srp == srp) & (datasets.index == species) ].iloc[0]
-    phase_scores_df = phase_scores_df.set_index("ORF_ID")
-    return phase_scores_df
+    dataset = datasets[(datasets.srp == srp) & (datasets.index == species)].iloc[0]
+    if not np.isnan(dataset.summarized_phase_scores):
+        print(dataset.summarized_phase_scores)
+        phase_scores_df = pd.read_csv(dataset.summarized_phase_scores, sep="\t")
+        phase_scores_df = phase_scores_df.set_index("ORF_ID")
+        return phase_scores_df
 
 
-def get_summarized_orf_counts(datasets, srp):
+def get_summarized_orf_counts(datasets, srp, species):
     """Read summarized_orfs as dataframe.
 
     Parameters
@@ -90,11 +94,12 @@ def get_summarized_orf_counts(datasets, srp):
     -------
     orf_counts_df: pd.DataFrame
     """
-    dataset = datasets[datasets.srp == srp].iloc[0]
-    orf_counts_df = pd.read_csv(dataset.summarized_orfs, sep="\t").set_index(
-        "experiment_accession"
-    )
-    return orf_counts_df
+    dataset = datasets[(datasets.srp == srp) & (datasets.index == species)].iloc[0]
+    if not np.isnan(dataset.summarized_orfs):
+        orf_counts_df = pd.read_csv(dataset.summarized_orfs, sep="\t").set_index(
+            "experiment_accession"
+        )
+        return orf_counts_df
 
 
 def get_project_summary_file(datasets, srp, species):
@@ -110,5 +115,5 @@ def get_project_summary_file(datasets, srp, species):
     -------
     file_path: string
     """
-    dataset = datasets[(datasets.srp == srp) & (datasets.index == species) ].iloc[0]
+    dataset = datasets[(datasets.srp == srp) & (datasets.index == species)].iloc[0]
     return dataset.project_metadata_path

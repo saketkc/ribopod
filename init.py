@@ -19,7 +19,9 @@ __SPECIES__ = sorted(
         {"label": "S.pombe (pombe)", "value": "ASM294v2"},
         {"label": "E.coli (ecoli)", "value": "ASM584v2"},
         {"label": "P.falciparum (plasmodium falciparum)", "value": "Epr1"},
-        {"label": "C.griseus (hamster)", "value": "CriGri_1.0"},
+        # {"label": "C.griseus (hamster)", "value": "CriGri_1.0"},
+        {"label": "T.brucei (african trypanosome)", "value": "TryBruApr2005chr11"},
+        {"label": "X.laevis (frog)", "value": "JGI_4.2"},
     ],
     key=lambda species: species["label"],
 )
