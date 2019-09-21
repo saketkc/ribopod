@@ -19,11 +19,9 @@ external_css = [
     "https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css",
 ]
 
-app = dash.Dash(name="ribopod")  # title="ribopod : Visualizing ribo-seq datasets")
-app.title = "ribopod : Visualizing ribo-seq datasets"
 
-for css in external_css:
-    app.css.append_css({"external_url": css})
+# for css in external_css:
+#    app.css.append_css({"external_url": css})
 # app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
 # Loading screen CSS
 # app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/brPBPO.css"})
@@ -31,16 +29,20 @@ for css in external_css:
 # app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
 
 # Dash CSS
-app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
+# app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
 # Loading screen CSS
-app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/brPBPO.css"})
+# app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/brPBPO.css"})
 
 external_js = ["https://code.jquery.com/jquery-3.2.1.min.js"]
 
-for js in external_js:
-    app.scripts.append_script({"external_url": js})
+# for js in external_js:
+#    app.scripts.append_script({"external_url": js})
 
 # app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app = dash.Dash(
+    name="ribopod", external_scripts=external_js, external_stylesheets=external_css
+)  # title="ribopod : Visualizing ribo-seq datasets")
+app.title = "ribopod : Visualizing ribo-seq datasets"
 server = app.server
 # app.scripts.config.serve_locally = True
 app.config.suppress_callback_exceptions = True

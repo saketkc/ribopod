@@ -2,7 +2,7 @@ from collections import OrderedDict
 
 import numpy as np
 import pandas as pd
-from plotly import tools
+from plotly import subplots
 from plotly.graph_objs import Bar
 
 
@@ -107,7 +107,7 @@ def plot_read_length_distribution(
     read_lengths : dict
                        Keys as sample name, value as series of read lengths
     """
-    fig = tools.make_subplots(
+    fig = subplots.make_subplots(
         rows=int(np.ceil(len(list(read_lengths.keys())) / samples_per_row)),
         cols=samples_per_row,
         subplot_titles=list(read_lengths.keys()),
@@ -136,6 +136,8 @@ def plot_read_length_distribution(
     fig["layout"].update(
         height=max(200 * len(list(read_lengths.keys())), 400),
         title="Read length distribution",
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
     )
     # fig['layout'].update(scene=dict(aspectmode="data"))
     fig["layout"].update(font=dict(family="Arial", size=18, color="#000000"))

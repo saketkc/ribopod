@@ -2,7 +2,7 @@ from collections import OrderedDict
 
 import numpy as np
 import pandas as pd
-from plotly import tools
+from plotly import subplots
 from plotly.graph_objs import Scatter, Bar  # , Heatmap Figure,
 
 import plotly.figure_factory as ff
@@ -164,7 +164,7 @@ def plot_metagene_coverage(
     """
     titles = list(metagene_dfs.keys())
 
-    fig = tools.make_subplots(
+    fig = subplots.make_subplots(
         rows=int(np.ceil(len(list(metagene_dfs.keys())) / samples_per_row)),
         cols=samples_per_row,
         subplot_titles=titles,
@@ -248,6 +248,8 @@ def plot_metagene_coverage(
         height=max(200 * len(list(metagene_dfs.keys())), 400),
         width=1000,
         title="Metagene distribution",
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
     )
     fig["layout"].update(font=dict(family="Arial", size=18, color="#000000"))
     for i in fig["layout"]["annotations"]:
@@ -300,11 +302,15 @@ def plot_phase_score_heatmap(phase_score_df):
         autosize=True,
         #        automargin=True,
         title="Phase Score heatmap",
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
     )
     # fig["layout"].update(scene=dict(aspectmode="data"))
     fig["layout"].update(
         font=dict(family="Arial", size=18),
         yaxis=dict(side="left", position=0, automargin=True),
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
     )
     # fig["layout"].update(showlegend=False)
     return fig

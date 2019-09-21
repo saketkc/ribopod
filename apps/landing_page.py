@@ -32,7 +32,11 @@ def display_bar_plot():  # , state, n_clicks):
     )
     # layout = Layout(clickmode='event+select'),
     fig = Figure(data=[trace])  #
-    fig["layout"].update(clickmode="event+select")
+    fig["layout"].update(
+        clickmode="event+select",
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+    )
     # print(fig)
     return fig  # layout=layout)
 
