@@ -2,6 +2,33 @@ import pandas as pd
 from plotly.graph_objs import Bar, Figure, Layout
 
 
+def format_figure(fig):
+    fig.update_xaxes(
+        showgrid=False,
+        showline=True,
+        linewidth=2,
+        linecolor="black",
+        gridwidth=1,
+        gridcolor="Gray",
+        tickwidth=1,
+        ticklen=10,
+        ticks="outside",
+        tickcolor="black",
+    )
+    fig.update_yaxes(
+        showgrid=True,
+        showline=True,
+        linewidth=2,
+        linecolor="black",
+        gridwidth=1,
+        gridcolor="Gray",
+        tickwidth=1,
+        ticklen=10,
+        ticks="outside",
+        tickcolor="black",
+    )
+
+
 def plot_orf_counts_stacked_bar(df):
     """Create stacked bar charts showing number of actively translating uORFs/ORFs/dORFs.
 
@@ -42,8 +69,12 @@ def plot_orf_counts_stacked_bar(df):
             name=column,
         )
         fig_data.append(trace)
-    layout = Layout(barmode="stack")
+    layout = Layout(
+        barmode="stack", paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)"
+    )
     fig = Figure(data=fig_data, layout=layout)
+    format_figure(fig)
+    fig["layout"].update(font=dict(family="Arial", size=18, color="#000000"))
     return fig
 
 
@@ -55,7 +86,7 @@ def plot_phase_scores_violin(phase_score_df):
     phase_score_df: DataFrame
                     table withindex as ORF ID and columns as phase scores
     """
-    if not phase_score_df:
+    if phase_score_df is None:
         return None
     columns = sorted(phase_score_df.columns.tolist())
     fig_data = []
@@ -74,6 +105,15 @@ def plot_phase_scores_violin(phase_score_df):
             # "jitter": 0,
         }
         fig_data.append(trace)
-    layout = Layout({"title": "", "yaxis": {"zeroline": False}})
+    layout = Layout(
+        {
+            "title": "",
+            "yaxis": {"zeroline": False},
+            "paper_bgcolor": "rgba(0,0,0,0)",
+            "plot_bgcolor": "rgba(0,0,0,0)",
+        }
+    )
     fig = Figure(data=fig_data, layout=layout)
+    format_figure(fig)
+    fig["layout"].update(font=dict(family="Arial", size=18, color="#000000"))
     return fig

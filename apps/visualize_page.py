@@ -41,7 +41,8 @@ layout = html.Div(
                     "ribopod: A database of actively-translating ORFs in Ribo-seq data"
                 ),
                 html.Hr(),
-            ]
+            ],
+            style={"text-align": "center"},
         ),
         html.Div(id="datatable-interactivity-container"),
         html.Div(
@@ -87,7 +88,8 @@ layout = html.Div(
                         "display": "none",
                     },
                 ),
-            ]
+            ],
+            style={"align": "center", "text-align": "center"},
         ),
         html.Div(
             [
@@ -111,27 +113,30 @@ layout = html.Div(
                         ),
                         html.Div(
                             [
-                                dcc.Checklist(
-                                    options=[
-                                        {
-                                            "label": "Codon level normalization (automatically de-trends)",
-                                            "value": "True",
-                                        }
+                                html.Div(
+                                    [
+                                        html.Label(
+                                            "Codon level normalization (automatically de-trends)"
+                                        )
                                     ],
+                                    style={"margin-top": "10%"},
+                                ),
+                                dcc.Checklist(
+                                    options=[{"value": "True"}],
                                     id="normalize-chk",
                                     value=[],
-                                )
+                                ),
                             ],
                             style={
-                                "width": "65%",
+                                "width": "25%",
                                 "display": "inline-block",
-                                "height": "100%",
                                 "align": "center",
                             },
                         ),
                     ]
                 )
-            ]
+            ],
+            style={"align": "center", "text-align": "center", "margin-bottom": "4%"},
         ),
         html.Div(
             [
@@ -424,7 +429,7 @@ def display_orf_count_dist_plot(srp, assembly):  # , state, n_clicks):
         assembly = assembly["value"]
     # get_summarized_phase_scores,
     orf_df = get_summarized_orf_counts(__DATASETS__, srp, assembly)
-    if orf_df:
+    if orf_df is not None:
         return plot_orf_counts_stacked_bar(orf_df)
 
 
@@ -439,4 +444,5 @@ def display_phase_score_dist_plot(srp, assembly):  # , state, n_clicks):
         assembly = assembly["value"]
     # get_summarized_phase_scores,
     phase_scores_df = get_summarized_phase_scores(__DATASETS__, srp, assembly)
-    return plot_phase_scores_violin(phase_scores_df)
+    if phase_scores_df is not None:
+        return plot_phase_scores_violin(phase_scores_df)

@@ -21,6 +21,9 @@ ROOT_DIRS = [
     "/data4/re-ribo-analysis",
 ]  # , "/data3/re-ribo-analysis", "/data4/re-ribo-analysis"]
 ROOT_DIRS_SUMMARY = ["/data2/re-ribo-analysis-summary-tables"]
+# This directory stores the summarized ORFs and their counts
+# inside each build directory
+ORF_TABLES_DIRNAME = "re-ribo-analysis-orf-tables"
 
 
 def check_ribotricer_output_exists(srp, srx, assembly):
@@ -105,7 +108,9 @@ def check_ribotricer_bam_summary_exists(srp, srx, assembly):
 
 def check_summarized_orfs_exists(srp, assembly):
     for rootdir in ROOT_DIRS_SUMMARY:
-        path = os.path.join(rootdir, assembly, "{}_summarized_orfs.tsv".format(srp))
+        path = os.path.join(
+            rootdir, assembly, ORF_TABLES_DIRNAME, "{}_summarized_orfs.tsv".format(srp)
+        )
         if os.path.exists(path):
             return path
 
@@ -113,7 +118,10 @@ def check_summarized_orfs_exists(srp, assembly):
 def check_summarized_phase_scores_exists(srp, assembly):
     for rootdir in ROOT_DIRS_SUMMARY:
         path = os.path.join(
-            rootdir, assembly, "{}_summarized_phase_scores.tsv".format(srp)
+            rootdir,
+            assembly,
+            ORF_TABLES_DIRNAME,
+            "{}_summarized_phase_scores.tsv".format(srp),
         )
         if os.path.exists(path):
             return path

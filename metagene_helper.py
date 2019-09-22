@@ -255,6 +255,40 @@ def plot_metagene_coverage(
     for i in fig["layout"]["annotations"]:
         i["font"] = dict(size=18)  # ,color='#ff0000')
     fig["layout"].update(showlegend=False)
+    for i in range(1, index + 1):
+        row = (i - 1) // samples_per_row + 1
+        col = (i - 1) % samples_per_row + 1
+        fig.update_yaxes(
+            showgrid=True,
+            showline=True,
+            linewidth=2,
+            linecolor="black",
+            gridwidth=1,
+            gridcolor="Gray",
+            row=row,
+            col=col,
+            tickwidth=1,
+            ticklen=10,
+            ticks="outside",
+            tickcolor="black",
+        )
+    for i in range(1, index + 1):
+        row = (i - 1) // samples_per_row + 1
+        col = (i - 1) % samples_per_row + 1
+        fig.update_xaxes(
+            showgrid=False,
+            showline=True,
+            linewidth=2,
+            linecolor="black",
+            gridwidth=1,
+            gridcolor="Gray",
+            row=row,
+            col=col,
+            tickwidth=1,
+            ticklen=10,
+            ticks="outside",
+            tickcolor="black",
+        )
     return fig
 
 
@@ -308,7 +342,7 @@ def plot_phase_score_heatmap(phase_score_df):
     # fig["layout"].update(scene=dict(aspectmode="data"))
     fig["layout"].update(
         font=dict(family="Arial", size=18),
-        yaxis=dict(side="left", position=0, automargin=True),
+        yaxis=dict(side="left", position=0, automargin=True, showgrid=True),
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
     )
