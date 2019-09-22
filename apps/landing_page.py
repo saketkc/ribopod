@@ -50,24 +50,28 @@ layout = html.Div(
                     [
                         html.H2(
                             "ribopod: A database of actively-translating ORFs in Ribo-seq data"
-                        )
+                        ),
+                        html.Hr(),
                     ],
-                    style={
-                        "margin-right": "auto",
-                        "margin-left": "auto",
-                        "width": "100%",
-                    },
+                    style={"text-align": "center"},
                 ),
-                html.Hr(),
                 html.Div(
                     [
                         html.Div(
                             [html.A("      Available Datasets", href="/")],
-                            style={"display": "inline-block", "width": "30%"},
+                            style={
+                                "display": "inline-block",
+                                "width": "50%",
+                                "text-align": "center",
+                            },
                         ),
                         html.Div(
                             [html.A("      Visualize", href="/visualize")],
-                            style={"display": "inline-block", "width": "30%"},
+                            style={
+                                "display": "inline-block",
+                                "width": "50%",
+                                "text-align": "center",
+                            },
                         ),
                     ]
                 ),
