@@ -7,7 +7,7 @@ __SPECIES__ = sorted(
         {"label": "H.sapiens (human)", "value": "hg38"},
         {"label": "M.musculus (mouse)", "value": "mm10"},
         {"label": "C.albicans (candida albicans)", "value": "SC5314"},
-        {"label": "D.melanogaster (housefly)", "value": "BDGP6"},
+        {"label": "D.melanogaster (fruitfly)", "value": "BDGP6"},
         {"label": "C.elegans (caenorhabditis elegans)", "value": "WBcel235"},
         {"label": "M.mulatta (macaque)", "value": "Mmul8"},
         {"label": "G.gallus (chicken)", "value": "GRCg6"},

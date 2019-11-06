@@ -244,9 +244,10 @@ def get_srp_table(srp, assembly, re_ribo_analysis_dir):
         preprocess_step2_dir = os.path.join(srpdir, "preprocessed")
         for srx, srx_group in srp_srx_grouped:
             ribotricer_output = check_ribotricer_output_exists(srp, srx, assembly)
-            ribotricer_metagene_5p, ribotricer_metagene_3p = check_ribotricer_metagene_exists(
-                srp, srx, assembly
-            )
+            (
+                ribotricer_metagene_5p,
+                ribotricer_metagene_3p,
+            ) = check_ribotricer_metagene_exists(srp, srx, assembly)
 
             ribotricer_bam_summary = check_ribotricer_bam_summary_exists(
                 srp, srx, assembly

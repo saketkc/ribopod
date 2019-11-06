@@ -38,6 +38,18 @@ def display_bar_plot():  # , state, n_clicks):
         plot_bgcolor="rgba(0,0,0,0)",
     )
     # print(fig)
+    fig.update_yaxes(
+        showgrid=True,
+        showline=True,
+        linewidth=2,
+        linecolor="black",
+        gridwidth=1,
+        gridcolor="Gray",
+        tickwidth=1,
+        ticklen=10,
+        ticks="outside",
+        tickcolor="black",
+    )
     return fig  # layout=layout)
 
 
