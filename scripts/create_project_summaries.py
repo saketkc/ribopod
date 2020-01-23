@@ -6,7 +6,8 @@
 
 from collections import defaultdict
 
-from pysradb import SRAdb
+#from pysradb import SRAdb
+from pysradb.sraweb import SRAweb
 import os
 import glob
 import pandas as pd
@@ -172,22 +173,23 @@ def create_df_from_dir(rootdir):
 
 
 def get_srp_table(srp, assembly, re_ribo_analysis_dir):
-    sradb = SRAdb("/data2/SRAmetadb.sqlite")
+    #sradb = SRAdb("/data2/SRAmetadb.sqlite")
+    sradb = SRAweb()
     column_order = [
         "study_accession",
         "experiment_title",
         "experiment_accession",
         "run_accession",
-        "taxon_id",
+        #"taxon_id",
         "library_selection",
         "library_layout",
         "library_strategy",
         "library_source",
-        "library_name",
-        "adapter_spec",
-        "bases",
-        "spots",
-        "avg_read_length",
+        #"library_name",
+        #"adapter_spec",
+        #"bases",
+        #"spots",
+        #"avg_read_length",
         "pass1_adapter",
         "pass1_total_reads_processed",
         "pass1_reads_with_adapters",
@@ -215,7 +217,10 @@ def get_srp_table(srp, assembly, re_ribo_analysis_dir):
                 srp_df = create_df_from_dir(filepath)
 
             # return pd.DataFrame()
-        srp_df.library_layout = srp_df.library_layout.fillna("SINGLE")
+        if "library_layout" in srp_df.columns:
+            srp_df.library_layout = srp_df.library_layout.fillna("SINGLE")
+        else:
+            srp_df["library_layout"] = "SINGLE"
         srp_df = srp_df[srp_df.library_layout.str.contains("SINGLE")]
 
         srp_df["pass1_reads_with_adapters"] = None
@@ -435,20 +440,6 @@ for root_dir in ROOT_DIRS:
             )
 
 
-# In[18]:
-
-
-__SRP_TO_ROOT_DIR_MAP__
-
-
-# In[19]:
-
-
-__ASSEMBLY_WISE_SRP__
-
-
-# In[20]:
-
 
 def get_fragment_lengths(file_path):
     try:
@@ -463,7 +454,7 @@ def get_fragment_lengths(file_path):
 # In[21]:
 
 
-db = SRAdb("/data2/SRAmetadb.sqlite")
+db = SRAweb()#SRAdb("/data2/SRAmetadb.sqlite")
 all_projects = []
 
 
